@@ -80,11 +80,12 @@ int compute(const Model &model, Config &config,
   bool config_unconstrained_log_probability_gradient = config.unconstrained_log_probability_gradient();
 
   std::vector<std::string> column_names;
-  std::vector<std::string> constrained_parameter_names;
-  std::vector<std::vector<size_t>> constrained_parameter_dimss;
+  std::vector<std::string> context_names;
+  std::vector<std::vector<size_t>> context_dimss;
   std::vector<std::string> unconstrained_parameter_names;
-  get_model_parameters(model, constrained_parameter_names, constrained_parameter_dimss);
-  // model.constrained_param_names(constrained_parameter_names, false, false);
+  std::vector<std::string> constrained_parameter_names;
+  get_model_parameters(model, context_names, context_dimss);
+  model.constrained_param_names(constrained_parameter_names, false, false);
   model.unconstrained_param_names(unconstrained_parameter_names, false, false);
   size_t no_constrained_parameters = constrained_parameter_names.size();
   size_t no_unconstrained_parameters = unconstrained_parameter_names.size();
@@ -177,7 +178,7 @@ int compute(const Model &model, Config &config,
         8*no_constrained_parameters
       );
       stan::io::array_var_context context(
-        constrained_parameter_names, constrained_parameters, constrained_parameter_dimss
+        context_names, constrained_parameters, context_dimss
       );
       model.transform_inits(context, dummy_params_i, unconstrained_parameters,
                             &msg);
